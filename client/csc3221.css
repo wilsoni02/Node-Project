@@ -1,0 +1,128 @@
+/*Created By: Ian Wilson*/
+/*Date: November 7th, 2023*/
+
+/* Style Reset */
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 1.6rem;
+  font-weight: normal;
+  line-height: 1.6;
+  color: #333;
+  background: #f4f4f4;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+/* Main content area */
+.page-area {
+  text-align: center;
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 480px;
+}
+
+/* Titles */
+h1 {
+  font-size: 3rem;
+  color: #333;
+  margin-bottom: 2rem;
+}
+
+/* Form elements */
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 1rem;
+  margin-top: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+/* Buttons */
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: 4px;
+}
+
+button:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover {
+  background-color: #0056b3;
+}
+
+.add-btn {
+  font-size: 1.8rem;
+  padding: 1rem 2rem;
+  margin: 0
+  auto;
+  display: block;
+}
+
+/* List */
+ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+li {
+  background: #f9f9f9;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  margin-top: 0.5rem;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Delete Button Styles */
+.delete-btn {
+  background: #ff3860;
+  color: white;
+  border: none;
+  padding: 0.8rem;
+  font-size: 1.4rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 1rem;
+  white-space: nowrap;
+  transition: background-color 0.3s ease;
+}
+
+.delete-btn:hover {
+  background: #fa0030;
+}
+
+
+/* Responsive */
+@media (min-width: 768px) {
+  body {
+    justify-content: flex-start;
+    padding-top: 4rem;
+  }
+}
