@@ -41,6 +41,18 @@ h1 {
   margin-bottom: 2rem;
 }
 
+.list-title {
+  font-size: 1.8rem; /* Example size, adjust as needed */
+  color: #333; /* Keeping it consistent with the rest of the text */
+  margin: 2rem 0; /* Space above and below the subtitle */
+}
+
+.subtitle {
+  font-size: 1.4rem; /* Example size, adjust as needed */
+  color: #666; /* A softer color for the subtitle */
+  margin-bottom: 2rem; /* Space below the subtitle */
+}
+
 /* Form elements */
 input[type="text"],
 textarea {
