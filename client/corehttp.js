@@ -52,4 +52,20 @@ class coreHTTP {
     const response = await fetch(`http://localhost:3000${url}`, requestOptions);
     return response;
   }
+
+  /* <<< HTTP PATCH request >>> */
+  async patch(url, requestData) {
+    const requestOptions = {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(requestData)
+    };
+    const response = await fetch(`http://localhost:3000${url}`, requestOptions);
+    if (response.ok) {
+      const responseData = await response.json();
+      return responseData;
+    } else {
+      return Promise.reject(response.status);
+    }
+  }
 }

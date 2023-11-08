@@ -8,39 +8,45 @@ const path = require("path");
 const filePath = path.join(__dirname, 'listdata.json');
 
 async function ReadData() {
+  let data = '';
   try {
-    // Check if the file exists. If not, return an empty array
-    try {
-      await fs.access(filePath);
-    } catch (error) {
+    await fs.access(filePath);
+    data = await fs.readFile(filePath, "utf8");
+    // Check if the data is empty or only contains whitespace
+    if (!data.trim()) {
+      console.error("File is empty, returning empty array.");
       return [];
     }
+  } catch (error) {
+    console.error("File not found or other error, returning empty array:", error);
+    return [];
+  }
 
-    // Read the file
-    const data = await fs.readFile(filePath, "utf8");
-
-    // Convert the buffer to a JSON object and return it
+  try {
     return JSON.parse(data);
   } catch (error) {
-    // Handle any errors
-    console.error("Error reading file:", error);
+    console.error("Error parsing JSON from file:", error);
+    // It might be useful to log the actual content that failed to parse
+    console.error("Invalid JSON content:", data);
     throw error;
   }
 }
+
+
 
 async function WriteData(dataOut) {
+  const tempFilePath = filePath + '.tmp';
   try {
-    // Convert the data to a JSON string
     const data = JSON.stringify(dataOut, null, 2);
-
-    // Write the file
-    await fs.writeFile(filePath, data, "utf8");
+    await fs.writeFile(tempFilePath, data, "utf8");
+    await fs.rename(tempFilePath, filePath);
+    return true;
   } catch (error) {
-    // Handle any errors
     console.error("Error writing file:", error);
-    throw error;
+    return { error: true, message: error.message };
   }
 }
+
 
 exports.ReadData = ReadData;
 exports.WriteData = WriteData;

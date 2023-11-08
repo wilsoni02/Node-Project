@@ -18,12 +18,15 @@ addButton.addEventListener("click", httpPost);
 function ShowList() {
   let output = "<ul>";
   theList.forEach((item, index) => {
-    output += `<li>${item} <button type="button" class="delete-btn" data-index="${index}">Delete</button></li>`;
+    output += `<li>${item} <button type="button" class="edit-btn" data-index="${index}">Edit</button><button type="button" class="delete-btn" data-index="${index}">Delete</button></li>`;
   });
   output += "</ul>";
   result.innerHTML = output;
 
-  // Attach click event listeners to the delete buttons
+  // Attach click event listeners to the edit and delete buttons
+  document.querySelectorAll('.edit-btn').forEach(button => {
+    button.addEventListener('click', handleEdit);
+  });
   document.querySelectorAll('.delete-btn').forEach(button => {
     button.addEventListener('click', httpDelete);
   });
@@ -37,27 +40,27 @@ async function GetList() {
     ShowList();
   } catch (error) {
     console.error('Error fetching list:', error);
-    result.innerHTML = `<p>Error loading list. Please try again later.</p>`;
+    result.innerHTML = `<p>Error loading list. Please check your network connection and try again later.</p>`;
   }
 }
 
 // Function to send a new item to the server
 async function WriteList(newItem) {
+  // Validate the new item
+  if (!newItem) {
+    alert('Please enter a valid item.');
+    return;
+  }
   try {
-    const response = await http.post('/api', { item: newItem });
-    // Ensure that the Fetch API response object has an 'ok' status
-    if (!response.ok) {
-      throw new Error('The operation did not succeed.');
-    }
-    // If the server is expected to return the added item, check for its presence
-    const responseData = await response.json();
-    if (!responseData || responseData !== newItem) {
-      throw new Error('Item was not added as expected.');
-    }
+      const response = await http.post('/api', { item: newItem });
+      if (!response.ok) {
+        const errorDetail = await response.json(); // Retrieve detailed error message if available
+        throw new Error(`Server responded with an error: ${response.status} - ${errorDetail.message}`);
+      }
     await GetList();
   } catch (error) {
     console.error('Error posting new item:', error);
-    alert('Error posting new item. Please try again.');
+    alert(`Error posting new item: ${error.message}`);
   }
 }
 
@@ -75,7 +78,7 @@ async function httpPost(event) {
   }
 }
 
-// Listener for Enter key in the input field
+// Listener for Enter/Return key in the input field
 input.addEventListener('keypress', function(event) {
   if (event.key === 'Enter') {
     httpPost(); // Call the httpPost function when Enter is pressed
@@ -86,19 +89,42 @@ input.addEventListener('keypress', function(event) {
 async function httpDelete(event) {
   event.preventDefault();
 
-  // Get the item's content to identify it for deletion
-  const itemContent = encodeURIComponent(event.target.closest('li').textContent.replace(' Delete', ''));
+  // Get the index of the item to delete
+  const index = event.target.dataset.index;
+  const itemContent = theList[index];
 
   try {
-    const response = await http.delete(`/api/${itemContent}`);
-
+    const response = await http.delete(`/api/${encodeURIComponent(itemContent)}`);
     if (!response.ok) {
-      throw new Error('Failed to delete the item');
+      throw new Error('Server responded with an error: ' + response.status);
     }
     await GetList();
   } catch (error) {
     console.error('Error deleting item:', error);
-    alert('Error deleting item. Please try again.');
+    alert('Error deleting item. Please check your network connection and try again.');
+  }
+}
+
+// Function to handle the Edit button click
+async function handleEdit(event) {
+  event.preventDefault();
+
+  // Get the index of the item to edit
+  const index = event.target.dataset.index;
+  const oldItem = theList[index]; // Ensure oldItem is correctly retrieved
+
+  // Prompt user for new item content
+  const newItem = prompt("Edit item:", oldItem);
+  if (newItem && newItem !== oldItem) {
+    try {
+      // Update the item in the list
+      theList[index] = newItem;
+      await http.patch(`/api/${encodeURIComponent(oldItem)}`, { item: newItem });
+      ShowList();
+    } catch (error) {
+      console.error('Error updating item:', error);
+      alert('Error updating item. Please try again.');
+    }
   }
 }
 

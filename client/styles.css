@@ -94,6 +94,25 @@ input[type="button"]:hover {
   display: block;
 }
 
+/* Edit Button Styles */
+.edit-btn {
+  background: #ffc107;
+  color: black;
+  border: none;
+  padding: 0.8rem;
+  font-size: 1.4rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 1rem;
+  white-space: nowrap;
+  transition: background-color 0.3s ease;
+}
+
+.edit-btn:hover {
+  background: #e0a800;
+}
+
+
 /* List */
 ul {
   list-style-type: none;
