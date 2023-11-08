@@ -61,17 +61,26 @@ async function WriteList(newItem) {
   }
 }
 
-
-
 // Function to handle the Add button click
 async function httpPost(event) {
-  event.preventDefault();
+  // If event is provided, and it's a submit event, prevent the default form submission
+  if (event && event.type === "submit") {
+    event.preventDefault();
+  }
+
   const newItem = input.value.trim();
   if (newItem) {
     await WriteList(newItem);
     input.value = ''; // Clear the input field
   }
 }
+
+// Listener for Enter key in the input field
+input.addEventListener('keypress', function(event) {
+  if (event.key === 'Enter') {
+    httpPost(); // Call the httpPost function when Enter is pressed
+  }
+});
 
 // Function to handle the Delete button click
 async function httpDelete(event) {
@@ -93,20 +102,20 @@ async function httpDelete(event) {
   }
 }
 
-
-
 // Function to show a loading message
 function showLoading() {
   result.innerHTML = "Loading...";
 }
 
-// Initial function to load the list and setup the UI
+// Initial function to load the list and set up the UI
 async function main() {
   addButton.disabled = true;
   showLoading();
   await GetList();
   addButton.disabled = false;
 }
+
+document.getElementById('listForm').addEventListener('submit', httpPost);
 
 // Load the list once the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', main);
